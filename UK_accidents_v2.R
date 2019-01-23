@@ -4,9 +4,9 @@ library(ggplot2)
 library(ggmap)
 library(maps)
 library(tidyverse)
+library(plotly)
 
-
-register_google("YOUR KEY HERE")
+register_google("YOUR API KEY HERE")
 
 
 #library(broom)
@@ -15,45 +15,23 @@ register_google("YOUR KEY HERE")
 getwd()
 project_dir<-choose.dir()
 setwd(project_dir)
-
 getwd()
+##########################
 
-file_dir<-choose.dir()
+Westminster_road_accidents<-read.csv(file="Westminster_road_accidents_2005to2015.csv")
 
+filas<-(length(Westminster_road_accidents$Date)-2999):length(Westminster_road_accidents$Date)
 
-UK_road_accidents<-read.csv(file=file.choose())
-#View(head(UK_road_accidents))
-#View(UK_road_accidents[UK_road_accidents$Local_Authority_.District.==1,])
+Westminster_relevant<-Westminster_road_accidents[,c(4,5,10,26,27)]
 
+Westminster<-as.tibble(Westminster_relevant)
 
-Westminster_road_accidents<-UK_road_accidents[c(UK_road_accidents$Local_Authority_.District.==1,UK_road_accidents$Accident_Severity==3),]
-
-
-#Dataset sin NA's
+View(Westminster)
 
 #funcion para remover NA's
 f4 <- function(dat) {
   dat %>% filter(Reduce(`+`, lapply(., is.na)) != ncol(.))
 }
-
-UK_road_accidents<-f4(UK_road_accidents)
-
-#View(Westminster_road_accidents)
-
-filas<-(length(Westminster_road_accidents$Date)-2999):length(Westminster_road_accidents$Date)
-
-Westminster_relevant<-Westminster_road_accidents[,c(4,5,10,26,27)]
-#View(Westminster_relevant)
-length(Westminster_relevant$Date)
-
-
-#View(Westminster_relevant[filas,])
-
-Westminster<-as.tibble(Westminster_relevant)
-
-Westminster
-View(Westminster)
-
 
 
 Westminster<-f4(Westminster)
@@ -105,6 +83,8 @@ Westminster_accident_grid+
   scale_y_continuous(name="Latitud")+
   ggtitle("Accidentes de tránsito \nen el área de Westminster, Londres \nAños 2005-2015")
   
+
+########## Y ahora de yapa: graficos interactivos con plot.ly
 
 
   
